@@ -1,7 +1,9 @@
 package com.xiaofei.packagename;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -56,6 +58,15 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 			List<ApplicationInfo> listAppcations = pm
 					.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
+			Collections.sort(listAppcations, new Comparator<ApplicationInfo>() {
+				private final Collator sCollator = Collator.getInstance();
+
+				public final int compare(ApplicationInfo aa, ApplicationInfo ab) {
+					return sCollator.compare(aa.packageName.toString(),
+							ab.packageName.toString());
+				}
+
+			});
 
 			for (ApplicationInfo app : listAppcations) {
 				// String activityName = reInfo.activityInfo.name; //
