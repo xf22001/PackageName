@@ -3,6 +3,7 @@ package com.xiaofei.packagename;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +12,58 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class BrowseApplicationInfoAdapter extends BaseAdapter {
+	private final static String TAG = "com.xiaofei.packagename";
 
-	private List<AppInfo> mlistAppInfo = null;
+	private List<AppInfo> mApps = null;
 
 	LayoutInflater infater = null;
 
 	public BrowseApplicationInfoAdapter(Context context, List<AppInfo> apps) {
 		infater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mlistAppInfo = apps;
+		mApps = apps;
+	}
+
+	public void setData(List<AppInfo> apps) {
+		mApps.clear();
+
+		if (apps != null) {
+			Log.e(TAG,
+					new Exception().getStackTrace()[0].toString() + apps.size());
+			mApps.addAll(apps);
+		}
+
+		// notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		System.out.println("size" + mlistAppInfo.size());
-		return mlistAppInfo.size();
+		int size = 0;
+
+		if (mApps != null) {
+			Log.e(TAG,
+					new Exception().getStackTrace()[0].toString()
+							+ mApps.size());
+			// TODO Auto-generated method stub
+			size = mApps.size();
+		} else {
+			Log.e(TAG, new Exception().getStackTrace()[0].toString()
+					+ "mApps is null!");
+		}
+
+		return size;
 	}
 
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return mlistAppInfo.get(position);
+		Object o = null;
+
+		if (mApps.size() > 0) {
+			o = mApps.get(position);
+		}
+
+		return o;
 	}
 
 	@Override
@@ -43,21 +74,25 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertview, ViewGroup arg2) {
-		System.out.println("getView at " + position);
 		View view = null;
 		ViewHolder holder = null;
-		if (convertview == null || convertview.getTag() == null) {
-			view = infater.inflate(R.layout.browse_app_item, null);
-			holder = new ViewHolder(view);
-			view.setTag(holder);
-		} else {
-			view = convertview;
-			holder = (ViewHolder) convertview.getTag();
+
+		if (mApps.size() > 0) {
+			if (convertview == null || convertview.getTag() == null) {
+				view = infater.inflate(R.layout.browse_app_item, null);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
+			} else {
+				view = convertview;
+				holder = (ViewHolder) convertview.getTag();
+			}
+
+			AppInfo appInfo = (AppInfo) getItem(position);
+			holder.appIcon.setImageDrawable(appInfo.getAppIcon());
+			holder.tvAppLabel.setText(appInfo.getAppLabel());
+			holder.tvPkgName.setText(appInfo.getPkgName());
 		}
-		AppInfo appInfo = (AppInfo) getItem(position);
-		holder.appIcon.setImageDrawable(appInfo.getAppIcon());
-		holder.tvAppLabel.setText(appInfo.getAppLabel());
-		holder.tvPkgName.setText(appInfo.getPkgName());
+
 		return view;
 	}
 
