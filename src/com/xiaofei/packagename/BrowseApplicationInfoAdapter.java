@@ -19,8 +19,7 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 	LayoutInflater infater = null;
 
 	public BrowseApplicationInfoAdapter(Context context, List<AppInfo> apps) {
-		infater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		infater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mApps = apps;
 	}
 
@@ -28,8 +27,7 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		mApps.clear();
 
 		if (apps != null) {
-			Log.e(TAG,
-					new Exception().getStackTrace()[0].toString() + apps.size());
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + apps.size());
 			mApps.addAll(apps);
 		}
 
@@ -41,14 +39,11 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		int size = 0;
 
 		if (mApps != null) {
-			Log.e(TAG,
-					new Exception().getStackTrace()[0].toString()
-							+ mApps.size());
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + mApps.size());
 			// TODO Auto-generated method stub
 			size = mApps.size();
 		} else {
-			Log.e(TAG, new Exception().getStackTrace()[0].toString()
-					+ "mApps is null!");
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + "mApps is null!");
 		}
 
 		return size;
