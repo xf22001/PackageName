@@ -8,7 +8,9 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -62,6 +64,8 @@ public class MainActivity extends Activity
 
 		mListView.setVisibility(View.INVISIBLE);
 
+		showDialog(0);
+
 		// queryAppInfo(this, mApps); // 查询所有应用程序信息
 		// mAdapter.setData(mApps);
 		// mListview.setVisibility(View.VISIBLE);
@@ -69,6 +73,21 @@ public class MainActivity extends Activity
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
 		getLoaderManager().initLoader(0, null, this);
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		ProgressDialog dialog = null;
+
+		if (id == 0) {
+			dialog = new ProgressDialog(this);
+			dialog.setTitle("正在加载");
+			dialog.setMessage("请稍等...");
+			dialog.setIndeterminate(true);
+			// dialog.setCancelable(true);
+		}
+
+		return dialog;
 	}
 
 	// 点击跳转至该应用程序
@@ -417,6 +436,8 @@ public class MainActivity extends Activity
 
 		// Set the new data in the adapter.
 		mAdapter.setData(apps);
+
+		dismissDialog(0);
 
 		mListView.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
 
