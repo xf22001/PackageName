@@ -27,8 +27,7 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 			mAppsLocal = new ArrayList<AppInfo>();
 		}
 
-		infater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		infater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mApps = apps;
 		mAppsLocal.clear();
 		mAppsLocal.addAll(apps);
@@ -39,13 +38,12 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		mAppsLocal.clear();
 
 		if (apps != null) {
-			Log.e(TAG,
-					new Exception().getStackTrace()[0].toString() + apps.size());
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + apps.size());
 			mApps.addAll(apps);
 			mAppsLocal.addAll(apps);
 		}
 
-		// notifyDataSetChanged();
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -53,14 +51,11 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		int size = 0;
 
 		if (mApps != null) {
-			Log.e(TAG,
-					new Exception().getStackTrace()[0].toString()
-							+ mApps.size());
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + mApps.size());
 			// TODO Auto-generated method stub
 			size = mApps.size();
 		} else {
-			Log.e(TAG, new Exception().getStackTrace()[0].toString()
-					+ "mApps is null!");
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + "mApps is null!");
 		}
 
 		return size;
@@ -128,14 +123,22 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		} else {
 			for (AppInfo appInfo : mAppsLocal) {
 				// String pattern = filter.toString().toLowerCase();
-				Pattern p = Pattern.compile(filter);
-				Matcher matcher = p.matcher(appInfo.getAppLabel()
-						+ appInfo.getPkgName());
+				Pattern p;
+				try {
+					p = Pattern.compile(filter);
+					Matcher matcher = p.matcher(appInfo.getAppLabel() + appInfo.getPkgName());
 
-				if (matcher.find()) {
-					mApps.add(appInfo);
+					if (matcher.find()) {
+						mApps.add(appInfo);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+
 			}
 		}
+
+		notifyDataSetChanged();
 	}
 }
