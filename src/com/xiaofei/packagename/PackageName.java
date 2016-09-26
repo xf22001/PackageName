@@ -50,7 +50,7 @@ public class PackageName extends Activity implements OnItemClickListener,
 
 	private ListView mListView = null;
 
-	private List<AppInfo> mApps = null;
+	private List<AppInfo> mApps = new ArrayList<AppInfo>();
 
 	private AppInfoAdapter mAdapter = null;
 
@@ -68,8 +68,6 @@ public class PackageName extends Activity implements OnItemClickListener,
 
 		mListView = (ListView) findViewById(R.id.listviewApp);
 
-		mApps = new ArrayList<AppInfo>();
-
 		mAdapter = new AppInfoAdapter(this, mApps);
 
 		Intent intent = getIntent();
@@ -84,12 +82,13 @@ public class PackageName extends Activity implements OnItemClickListener,
 
 		showDialog(0);
 
-		queryAppInfo(this, mApps); // 查询所有应用程序信息
-		mAdapter.setData(mApps);
-
-		mListView.startAnimation(AnimationUtils.loadAnimation(this,
-				android.R.anim.fade_in));
-		mListView.setVisibility(View.VISIBLE);
+		// List<AppInfo> apps = new ArrayList<AppInfo>();
+		// queryAppInfo(this, apps); // 查询所有应用程序信息
+		// mAdapter.setData(apps);
+		// dismissDialog(0);
+		// mListView.startAnimation(AnimationUtils.loadAnimation(this,
+		// android.R.anim.fade_in));
+		// mListView.setVisibility(View.VISIBLE);
 
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
