@@ -133,7 +133,7 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 			}
