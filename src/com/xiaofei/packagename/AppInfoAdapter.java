@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class BrowseApplicationInfoAdapter extends BaseAdapter {
+public class AppInfoAdapter extends BaseAdapter {
 	private final static String TAG = "com.xiaofei.packagename";
 
 	private List<AppInfo> mApps = null;
@@ -22,12 +22,13 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 
 	LayoutInflater infater = null;
 
-	public BrowseApplicationInfoAdapter(Context context, List<AppInfo> apps) {
+	public AppInfoAdapter(Context context, List<AppInfo> apps) {
 		if (mAppsLocal == null) {
 			mAppsLocal = new ArrayList<AppInfo>();
 		}
 
-		infater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		infater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mApps = apps;
 		mAppsLocal.clear();
 		mAppsLocal.addAll(apps);
@@ -38,7 +39,8 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		mAppsLocal.clear();
 
 		if (apps != null) {
-			Log.e(TAG, new Exception().getStackTrace()[0].toString() + apps.size());
+			Log.e(TAG,
+					new Exception().getStackTrace()[0].toString() + apps.size());
 			mApps.addAll(apps);
 			mAppsLocal.addAll(apps);
 		}
@@ -51,11 +53,14 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 		int size = 0;
 
 		if (mApps != null) {
-			Log.e(TAG, new Exception().getStackTrace()[0].toString() + mApps.size());
+			Log.e(TAG,
+					new Exception().getStackTrace()[0].toString()
+							+ mApps.size());
 			// TODO Auto-generated method stub
 			size = mApps.size();
 		} else {
-			Log.e(TAG, new Exception().getStackTrace()[0].toString() + "mApps is null!");
+			Log.e(TAG, new Exception().getStackTrace()[0].toString()
+					+ "mApps is null!");
 		}
 
 		return size;
@@ -126,14 +131,15 @@ public class BrowseApplicationInfoAdapter extends BaseAdapter {
 				Pattern p;
 				try {
 					p = Pattern.compile(filter);
-					Matcher matcher = p.matcher(appInfo.getAppLabel() + appInfo.getPkgName());
+					Matcher matcher = p.matcher(appInfo.getAppLabel()
+							+ appInfo.getPkgName());
 
 					if (matcher.find()) {
 						mApps.add(appInfo);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					// e.printStackTrace();
 				}
 
 			}

@@ -42,8 +42,9 @@ import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 
 @SuppressLint("NewApi")
-public class MainActivity extends Activity implements OnItemClickListener, LoaderManager.LoaderCallbacks<List<AppInfo>>,
-		OnQueryTextListener, OnCloseListener {
+public class PackageName extends Activity implements OnItemClickListener,
+		LoaderManager.LoaderCallbacks<List<AppInfo>>, OnQueryTextListener,
+		OnCloseListener {
 
 	private final static String TAG = "com.xiaofei.packagename";
 
@@ -51,7 +52,9 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 
 	private List<AppInfo> mApps = null;
 
-	private BrowseApplicationInfoAdapter mAdapter = null;
+	private AppInfoAdapter mAdapter = null;
+
+	int mIntentExtra = 0;
 
 	MySearchView mSearchView = null;
 
@@ -67,20 +70,26 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 
 		mApps = new ArrayList<AppInfo>();
 
-		mAdapter = new BrowseApplicationInfoAdapter(this, mApps);
+		mAdapter = new AppInfoAdapter(this, mApps);
 
-		mListView.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
+		Intent intent = getIntent();
+		mIntentExtra = intent.getIntExtra("com.xiaofei.packagename.querytype",
+				0);
 
+		mListView.startAnimation(AnimationUtils.loadAnimation(this,
+				android.R.anim.fade_out));
+		mListView.setVisibility(View.INVISIBLE);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
 
-		mListView.setVisibility(View.INVISIBLE);
-
 		showDialog(0);
 
-		// queryAppInfo(this, mApps); // 查询所有应用程序信息
-		// mAdapter.setData(mApps);
-		// mListview.setVisibility(View.VISIBLE);
+		queryAppInfo(this, mApps); // 查询所有应用程序信息
+		mAdapter.setData(mApps);
+
+		mListView.startAnimation(AnimationUtils.loadAnimation(this,
+				android.R.anim.fade_in));
+		mListView.setVisibility(View.VISIBLE);
 
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
@@ -149,7 +158,8 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 		// Place an action bar item for searching.
 		MenuItem item = menu.add("Search");
 		item.setIcon(android.R.drawable.ic_menu_search);
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
+				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		mSearchView = new MySearchView(this);
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setOnCloseListener(this);
@@ -160,7 +170,8 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 	}
 
 	// 点击跳转至该应用程序
-	public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+	public void onItemClick(AdapterView<?> adapter, View view, int position,
+			long arg3) {
 		// TODO Auto-generated method stub
 		// Intent intent = adapter.getItem(position).getIntent();
 		// startActivity(intent);
@@ -168,20 +179,37 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 
 	// 获得所有启动Activity的信息，类似于Launch界面
 	public void queryAppInfo(Context context, List<AppInfo> apps) {
-		getAppInfoByGetInstalledApplications(context, apps);
-		// getAppInfoByGetInstalledPackages(context, apps);
-		// getAppInfoByQueryIntentActivities(context, apps);
+		switch (mIntentExtra) {
+		case 0:
+			getAppInfoByGetInstalledApplications(context, apps);
+			break;
+
+		case 1:
+			getAppInfoByGetInstalledPackages(context, apps);
+			break;
+
+		case 2:
+			getAppInfoByQueryIntentActivities(context, apps);
+			break;
+		default:
+			getAppInfoByGetInstalledApplications(context, apps);
+			break;
+		}
+
 	}
 
-	public class ApplicationInfoComparator implements Comparator<ApplicationInfo> {
+	public class ApplicationInfoComparator implements
+			Comparator<ApplicationInfo> {
 		private final Collator sCollator = Collator.getInstance();
 
 		public final int compare(ApplicationInfo a, ApplicationInfo b) {
-			return sCollator.compare(a.packageName.toString(), b.packageName.toString());
+			return sCollator.compare(a.packageName.toString(),
+					b.packageName.toString());
 		}
 	};
 
-	public void getAppInfoByGetInstalledApplications(Context context, List<AppInfo> apps) {
+	public void getAppInfoByGetInstalledApplications(Context context,
+			List<AppInfo> apps) {
 		if (apps == null) {
 			return;
 		}
@@ -190,7 +218,8 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 
 		PackageManager pm = context.getPackageManager(); // 获得PackageManager对象
 
-		List<ApplicationInfo> listAppcations = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
+		List<ApplicationInfo> listAppcations = pm
+				.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
 		Collections.sort(listAppcations, new ApplicationInfoComparator());
 
 		for (ApplicationInfo app : listAppcations) {
@@ -211,11 +240,13 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 		private final Collator sCollator = Collator.getInstance();
 
 		public final int compare(PackageInfo a, PackageInfo b) {
-			return sCollator.compare(a.packageName.toString(), b.packageName.toString());
+			return sCollator.compare(a.packageName.toString(),
+					b.packageName.toString());
 		}
 	};
 
-	public void getAppInfoByGetInstalledPackages(Context context, List<AppInfo> apps) {
+	public void getAppInfoByGetInstalledPackages(Context context,
+			List<AppInfo> apps) {
 		if (apps == null) {
 			return;
 		}
@@ -224,7 +255,8 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 
 		PackageManager pm = context.getPackageManager(); // 获得PackageManager对象
 
-		List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
+		List<PackageInfo> packageInfoList = pm
+				.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
 		Collections.sort(packageInfoList, new PackageInfoComparator());
 
 		for (PackageInfo info : packageInfoList) {
@@ -232,7 +264,8 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 			ApplicationInfo app;
 
 			try {
-				app = pm.getApplicationInfo(pkgName, PackageManager.GET_UNINSTALLED_PACKAGES);
+				app = pm.getApplicationInfo(pkgName,
+						PackageManager.GET_UNINSTALLED_PACKAGES);
 			} catch (NameNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -254,11 +287,13 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 		private final Collator sCollator = Collator.getInstance();
 
 		public final int compare(ResolveInfo a, ResolveInfo b) {
-			return sCollator.compare(a.activityInfo.packageName.toString(), b.activityInfo.packageName.toString());
+			return sCollator.compare(a.activityInfo.packageName.toString(),
+					b.activityInfo.packageName.toString());
 		}
 	};
 
-	public void getAppInfoByQueryIntentActivities(Context context, List<AppInfo> apps) {
+	public void getAppInfoByQueryIntentActivities(Context context,
+			List<AppInfo> apps) {
 		if (apps == null) {
 			return;
 		}
@@ -272,41 +307,10 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 		// 's/public static final String \s*\([^\s
 		// ]\+\)\s*=\s*\"android.intent.category.*/mainIntent.addCategory\(Intent.\1\);/g'
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-		// mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-		// mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
-		// mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-		// mainIntent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-		// mainIntent.addCategory(Intent.CATEGORY_SELECTED_ALTERNATIVE);
-		// mainIntent.addCategory(Intent.CATEGORY_TAB);
-		// mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-		// mainIntent.addCategory(Intent.CATEGORY_INFO);
-		// mainIntent.addCategory(Intent.CATEGORY_HOME);
-		// mainIntent.addCategory(Intent.CATEGORY_PREFERENCE);
-		// mainIntent.addCategory(Intent.CATEGORY_DEVELOPMENT_PREFERENCE);
-		// mainIntent.addCategory(Intent.CATEGORY_EMBED);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_MARKET);
-		// mainIntent.addCategory(Intent.CATEGORY_MONKEY);
-		// mainIntent.addCategory(Intent.CATEGORY_TEST);
-		// mainIntent.addCategory(Intent.CATEGORY_UNIT_TEST);
-		// mainIntent.addCategory(Intent.CATEGORY_SAMPLE_CODE);
-		// mainIntent.addCategory(Intent.CATEGORY_OPENABLE);
-		// mainIntent.addCategory(Intent.CATEGORY_CAR_DOCK);
-		// mainIntent.addCategory(Intent.CATEGORY_DESK_DOCK);
-		// mainIntent.addCategory(Intent.CATEGORY_LE_DESK_DOCK);
-		// mainIntent.addCategory(Intent.CATEGORY_HE_DESK_DOCK);
-		// mainIntent.addCategory(Intent.CATEGORY_CAR_MODE);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_BROWSER);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_CALCULATOR);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_CALENDAR);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_CONTACTS);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_EMAIL);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_GALLERY);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_MAPS);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-		// mainIntent.addCategory(Intent.CATEGORY_APP_MUSIC);
-		// 通过查询，获得所有ResolveInfo对象.
-		List<ResolveInfo> resolveInfos = pm.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY);
+		List<ResolveInfo> resolveInfos = pm
+				.queryIntentActivities(mainIntent, 0);
 
 		Collections.sort(resolveInfos, new ResolveInfoComparator());
 
@@ -324,7 +328,7 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 			appInfo.setPkgName(pkgName);
 			appInfo.setAppIcon(icon);
 			appInfo.setIntent(launchIntent);
-			mApps.add(appInfo); // 添加至列表中
+			apps.add(appInfo); // 添加至列表中
 		}
 	}
 
@@ -384,8 +388,9 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 		 */
 		@Override
 		public List<AppInfo> loadInBackground() {
-			((MainActivity) mContext).queryAppInfo(getContext(), mApps);
-			Log.e(TAG, new Exception().getStackTrace()[0].toString() + "size: " + mApps.size());
+			((PackageName) mContext).queryAppInfo(getContext(), mApps);
+			Log.e(TAG, new Exception().getStackTrace()[0].toString() + "size: "
+					+ mApps.size());
 
 			return mApps;
 		}
@@ -501,14 +506,16 @@ public class MainActivity extends Activity implements OnItemClickListener, Loade
 	public void onLoadFinished(Loader<List<AppInfo>> loader, List<AppInfo> apps) {
 		// TODO Auto-generated method stub
 
-		Log.e(TAG, new Exception().getStackTrace()[0].toString() + "size: " + apps.size());
+		Log.e(TAG, new Exception().getStackTrace()[0].toString() + "size: "
+				+ apps.size());
 
 		// Set the new data in the adapter.
 		mAdapter.setData(apps);
 
 		dismissDialog(0);
 
-		mListView.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+		mListView.startAnimation(AnimationUtils.loadAnimation(this,
+				android.R.anim.fade_in));
 
 		// The list should now be shown.
 		mListView.setVisibility(View.VISIBLE);
