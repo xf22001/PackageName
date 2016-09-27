@@ -41,11 +41,11 @@ public class PackageName extends Activity {
 								1)));
 		bar.addTab(bar
 				.newTab()
-				.setText("system activity")
+				.setText("installed activity")
 				.setTabListener(
 						new TabListener<PackageNameFragmentActivity.AppListFragment>(
 								this,
-								"system activity",
+								"installed activity",
 								PackageNameFragmentActivity.AppListFragment.class,
 								2)));
 
