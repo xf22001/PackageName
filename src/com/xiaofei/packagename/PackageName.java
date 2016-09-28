@@ -24,7 +24,7 @@ public class PackageName extends Activity {
 
 		bar.addTab(bar
 				.newTab()
-				.setText("installed app")
+				.setText("已安装程序")
 				.setTabListener(
 						new TabListener<PackageNameFragmentActivity.AppListFragment>(
 								this,
@@ -33,22 +33,13 @@ public class PackageName extends Activity {
 								0)));
 		bar.addTab(bar
 				.newTab()
-				.setText("installed package")
-				.setTabListener(
-						new TabListener<PackageNameFragmentActivity.AppListFragment>(
-								this,
-								"installed package",
-								PackageNameFragmentActivity.AppListFragment.class,
-								1)));
-		bar.addTab(bar
-				.newTab()
-				.setText("installed activity")
+				.setText("已安装窗口")
 				.setTabListener(
 						new TabListener<PackageNameFragmentActivity.AppListFragment>(
 								this,
 								"installed activity",
 								PackageNameFragmentActivity.AppListFragment.class,
-								2)));
+								1)));
 
 		if (savedInstanceState != null) {
 			bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));

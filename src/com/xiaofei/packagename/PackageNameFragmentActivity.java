@@ -100,9 +100,9 @@ public class PackageNameFragmentActivity extends Activity {
 
 			// Prepare the loader. Either re-connect with an existing one,
 			// or start a new one.
-			if (mType == 2) {
+			if (mType == 1) {
 
-				Dialog dialog = getMultiSelectDialog(1);
+				Dialog dialog = getMultiSelectDialog(0);
 				dialog.show();
 			} else {
 				getLoaderManager().initLoader(0, null, this);
@@ -344,12 +344,7 @@ public class PackageNameFragmentActivity extends Activity {
 				case 0:
 					getAppInfoByGetInstalledApplications(context, apps);
 					break;
-
 				case 1:
-					getAppInfoByGetInstalledPackages(context, apps);
-					break;
-
-				case 2:
 					getAppInfoByQueryIntentActivities(context, apps);
 					break;
 
@@ -388,54 +383,6 @@ public class PackageNameFragmentActivity extends Activity {
 				for (ApplicationInfo app : listAppcations) {
 					// 获得该应用程序的启动Activity的name
 					String pkgName = app.packageName; // 获得应用程序的包名
-					String appLabel = (String) app.loadLabel(pm); // 获得应用程序的Label
-					Drawable icon = app.loadIcon(pm); // 获得应用程序图标
-					// 创建一个AppInfo对象，并赋值
-					AppInfo appInfo = new AppInfo();
-					appInfo.setAppLabel(appLabel);
-					appInfo.setPkgName(pkgName);
-					appInfo.setAppIcon(icon);
-					apps.add(appInfo); // 添加至列表中
-				}
-			}
-
-			public class PackageInfoComparator implements
-					Comparator<PackageInfo> {
-				private final Collator sCollator = Collator.getInstance();
-
-				public final int compare(PackageInfo a, PackageInfo b) {
-					return sCollator.compare(a.packageName.toString(),
-							b.packageName.toString());
-				}
-			};
-
-			void getAppInfoByGetInstalledPackages(Context context,
-					List<AppInfo> apps) {
-				if (apps == null) {
-					return;
-				}
-
-				apps.clear();
-
-				PackageManager pm = context.getPackageManager(); // 获得PackageManager对象
-
-				List<PackageInfo> packageInfoList = pm
-						.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);// GET_UNINSTALLED_PACKAGES代表已删除，但还有安装目录的
-				Collections.sort(packageInfoList, new PackageInfoComparator());
-
-				for (PackageInfo info : packageInfoList) {
-					String pkgName = info.packageName; // 获得应用程序的包名
-					ApplicationInfo app;
-
-					try {
-						app = pm.getApplicationInfo(pkgName,
-								PackageManager.GET_UNINSTALLED_PACKAGES);
-					} catch (NameNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						continue;
-					}
-
 					String appLabel = (String) app.loadLabel(pm); // 获得应用程序的Label
 					Drawable icon = app.loadIcon(pm); // 获得应用程序图标
 					// 创建一个AppInfo对象，并赋值
@@ -628,7 +575,7 @@ public class PackageNameFragmentActivity extends Activity {
 				mCategoryList.clear();
 
 				Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setTitle("CATEGORY:");
+				builder.setTitle("选择类别");
 				builder.setMultiChoiceItems(items, checkedItems,
 						new MultiChioceClickListener());
 				builder.setPositiveButton("确定", new OkClickListener());
