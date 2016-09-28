@@ -98,7 +98,10 @@ public class PackageName extends Activity {
 		}
 
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(mActivity, "Reselected!",
+			// Toast.LENGTH_SHORT).show();
+			ft.detach(mFragment);
+			ft.attach(mFragment);
 		}
 	}
 }

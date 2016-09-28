@@ -575,7 +575,7 @@ public class PackageNameFragmentActivity extends Activity {
 				mCategoryList.clear();
 
 				Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setTitle("选择类别");
+				builder.setTitle("过滤类别");
 				builder.setMultiChoiceItems(items, checkedItems,
 						new MultiChioceClickListener());
 				builder.setPositiveButton("确定", new OkClickListener());
