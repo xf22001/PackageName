@@ -229,7 +229,12 @@ public class PackageNameFragmentActivity extends Activity {
 			 */
 			@Override
 			public List<AppInfo> loadInBackground() {
-				queryAppInfo(getContext(), mType, mApps);
+				try {
+					queryAppInfo(getContext(), mType, mApps);
+				} catch (Exception e) {
+					// TODO: handle exception
+					// e.printStackTrace();
+				}
 				Log.e(TAG, new Exception().getStackTrace()[0].toString()
 						+ "size: " + mApps.size());
 
@@ -568,7 +573,7 @@ public class PackageNameFragmentActivity extends Activity {
 
 			switch (id) {
 			case 0: {
-				for (int i = 0; i < values.length; i++) {
+				for (int i = 0; i < items.length; i++) {
 					checkedItems[i] = false;
 				}
 
@@ -589,7 +594,7 @@ public class PackageNameFragmentActivity extends Activity {
 				mCategoryList.clear();
 
 				Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setTitle("CATEGORY:");
+				builder.setTitle("过滤类别");
 				builder.setSingleChoiceItems(items, 0,
 						new SingleChioceClickListener());
 				builder.setPositiveButton("确定", new OkClickListener());
