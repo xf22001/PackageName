@@ -99,9 +99,11 @@ public class AppInfoAdapter extends BaseAdapter {
 				holder = (ViewHolder) convertview.getTag();
 			}
 
+			String id = String.format("[%d]", position);
+
 			AppInfo appInfo = (AppInfo) getItem(position);
 			holder.appIcon.setImageDrawable(appInfo.getAppIcon());
-			holder.tvAppLabel.setText(appInfo.getAppLabel());
+			holder.tvAppLabel.setText(id + appInfo.getAppLabel());
 			holder.tvPkgName.setText(appInfo.getPkgName());
 		}
 
